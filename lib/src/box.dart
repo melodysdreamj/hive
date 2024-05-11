@@ -64,7 +64,7 @@ abstract interface class Box<E> {
   /// does not exist.
   List<E?> getAll(Iterable<String> keys);
 
-  List<E?> getRealAll();
+  Map<String?, E?> getRealAll();
 
   /// Returns all values in the given range.
   ///

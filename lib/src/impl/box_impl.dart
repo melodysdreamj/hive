@@ -130,11 +130,10 @@ class _BoxImpl<E> implements Box<E> {
   }
 
   @override
-  List<E?> getRealAll() {
-    final frames = collection.where().findAll();
-    return frames.map(_frameFromJson).toList();
+  Map<String, E?> getRealAll() {
+    final frames = collection.where().findAll().cast<Frame>();
+    return {for (final frame in frames) frame.key!: _frameFromJson(frame)};
   }
-
 
   @override
   List<E> getRange(int start, int end) {
@@ -142,11 +141,7 @@ class _BoxImpl<E> implements Box<E> {
       return [];
     }
 
-    final frames = collection
-        .where()
-        .findAll(offset: start, limit: end - start)
-        .map(_frameFromJson)
-        .toList();
+    final frames = collection.where().findAll(offset: start, limit: end - start).map(_frameFromJson).toList();
 
     if (frames.length != end - start) {
       RangeError.checkValidRange(start, end, length);
@@ -190,8 +185,7 @@ class _BoxImpl<E> implements Box<E> {
   @override
   void putAt(int index, E value) {
     write(() {
-      final idAtIndex =
-          collection.where().idProperty().findFirst(offset: index);
+      final idAtIndex = collection.where().idProperty().findFirst(offset: index);
       if (idAtIndex == null) {
         throw IndexError.withLength(index, length);
       }
@@ -242,10 +236,7 @@ class _BoxImpl<E> implements Box<E> {
         return;
       }
 
-      final idsInRange = collection
-          .where()
-          .idProperty()
-          .findAll(offset: start, limit: end - start);
+      final idsInRange = collection.where().idProperty().findAll(offset: start, limit: end - start);
 
       if (idsInRange.length != end - start) {
         RangeError.checkValidRange(start, end, length);
@@ -334,8 +325,7 @@ class _BoxImpl<E> implements Box<E> {
         return;
       }
 
-      final deleted =
-          collection.where().deleteAll(offset: start, limit: end - start);
+      final deleted = collection.where().deleteAll(offset: start, limit: end - start);
 
       if (deleted != end - start) {
         RangeError.checkValidRange(start, end, length);
