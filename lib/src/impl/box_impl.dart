@@ -130,6 +130,13 @@ class _BoxImpl<E> implements Box<E> {
   }
 
   @override
+  List<E?> getRealAll() {
+    final frames = collection.where().findAll();
+    return frames.map(_frameFromJson).toList();
+  }
+
+
+  @override
   List<E> getRange(int start, int end) {
     if (start == 0 && end == 0) {
       return [];
